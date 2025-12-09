@@ -15,6 +15,7 @@ export const apolloWSURL = `wss://${host}:${process.env.NEXT_PUBLIC_PROXY_PORT}/
 
 export default function api(url: string, config?: AxiosRequestConfig) {
   const requestURL = url.startsWith("http") ? url : `${baseURL}${url}`;
+  
   return axios(requestURL, {
     ...config,
     headers: {

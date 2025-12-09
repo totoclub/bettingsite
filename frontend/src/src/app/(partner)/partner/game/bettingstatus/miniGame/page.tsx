@@ -98,7 +98,7 @@ const MiniGame: React.FC = () => {
       render: (_, __, index) => (currentPage - 1) * pageSize + index + 1
     },
     {
-      title: "Level",
+      title: t("userid"),
       dataIndex: "level",
       key: "level",
       fixed: "left",

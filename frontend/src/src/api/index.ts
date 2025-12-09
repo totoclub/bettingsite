@@ -9,8 +9,8 @@ if (typeof window !== "undefined") {
   }
 }
 export const baseURL = `/api/v1/`; // `http://${host}:${process.env.NEXT_PUBLIC_PROXY_PORT}/api/v1`;
-export const wsURL = `wss://${host}/api/v1/ws`;
-// export const wsURL = `ws${isSSL}://${host}:${process.env.NEXT_PUBLIC_PROXY_PORT}/api/v1/ws`;
+// export const wsURL = `wss://${host}/api/v1/ws`;
+export const wsURL = `ws${isSSL}://${host}:${process.env.NEXT_PUBLIC_PROXY_PORT}/api/v1/ws`;
 export const apolloWSURL = `wss://${host}:${process.env.NEXT_PUBLIC_PROXY_PORT}/api/v1`;
 
 export default function api(url: string, config?: AxiosRequestConfig) {

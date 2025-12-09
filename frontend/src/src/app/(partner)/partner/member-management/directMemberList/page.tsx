@@ -178,6 +178,10 @@ export default function DirectMemberListPage() {
     fetchMembers();
   };
 
+  const popupWindow = (id: number) => {
+    window.open(`/partner/popup/user?id=${id}`, '_blank', 'width=screen.width,height=screen.height,toolbar=no,menubar=no,scrollbars=yes,resizable=yes,location=no,status=no');
+  }
+
   // Prepare table data with total row
   const tableData: (DirectMember & { isTotal?: boolean; key: string | number })[] = totalRow
     ? [
@@ -223,11 +227,11 @@ export default function DirectMemberListPage() {
       render: (text, record) => {
         if (record.isTotal) return "-";
         return (
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 cursor-pointer" onClick={() => popupWindow(record.id || 0)}>
             <div className="w-4 h-4 flex items-center justify-center rounded-full bg-[#1677ff] text-white text-xs">
               {record.point > 0 ? 1 : 0}
             </div>
-            <span className="text-xs text-[white] bg-[#000] px-1 py-0.5 rounded cursor-pointer">
+            <span className="text-xs text-[white] bg-[#000] px-1 py-0.5 rounded">
               {text}
             </span>
           </div>

@@ -320,29 +320,29 @@ export default function DepositRequestPage() {
                 showTime
                 format="YYYY-MM-DD HH:mm"
               />
-              <Input.Search
-                size="small"
-                placeholder={t("idNicknameAccount") || "ID/Nickname/Account"}
-                value={searchValue}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setSearchValue(value);
-                  if (!value) {
-                    onSearch("");
-                  }
-                }}
-                suffix={
-                  <Button
-                    size="small"
-                    type="text"
-                    icon={<RxLetterCaseToggle />}
-                  />
-                }
-                enterButton={t("search")}
-                onSearch={onSearch}
-                allowClear
-                style={{ width: 300 }}
-              />
+              <Space.Compact>
+                <Input.Search
+                  size="small"
+                  placeholder={t("idNicknameAccount") || "ID/Nickname/Account"}
+                  value={searchValue}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setSearchValue(value);
+                    if (!value) {
+                      onSearch("");
+                    }
+                  }}
+                  enterButton={t("search")}
+                  onSearch={onSearch}
+                  allowClear
+                  style={{ width: 300 }}
+                />
+                <Button
+                  size="small"
+                  type="default"
+                  icon={<RxLetterCaseToggle />}
+                />
+              </Space.Compact>
             </Space>
             <Select
               size="small"

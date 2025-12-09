@@ -134,6 +134,10 @@ export default function WaitingForMemberApprovalPage() {
     fetchMembers();
   };
 
+  const popupWindow = (id: number) => {
+    window.open(`/partner/popup/user?id=${id}`, '_blank', 'width=screen.width,height=screen.height,toolbar=no,menubar=no,scrollbars=yes,resizable=yes,location=no,status=no');
+  }
+
   const columns: TableProps<WaitingForMemberApproval>["columns"] = [
     {
       title: t("number"),
@@ -151,11 +155,11 @@ export default function WaitingForMemberApprovalPage() {
       width: 150,
       render: (text, record) => {
         return (
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 cursor-pointer" onClick={() => popupWindow(record.id || 0)}>
             <div className="w-4 h-4 flex items-center justify-center rounded-full bg-[#1677ff] text-white text-xs">
               0
             </div>
-            <span className="text-xs text-[white] bg-[#000] px-1 py-0.5 rounded cursor-pointer">
+            <span className="text-xs text-[white] bg-[#000] px-1 py-0.5 rounded">
               {text}
             </span>
           </div>

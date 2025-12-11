@@ -309,7 +309,7 @@ const Head = () => {
     fetchCasinoBalance();
 
     // Set up interval to fetch every second
-    const interval = setInterval(fetchCasinoBalance, 1000);
+    const interval = setInterval(fetchCasinoBalance, 5000);
 
     // Cleanup interval on component unmount
     return () => clearInterval(interval);

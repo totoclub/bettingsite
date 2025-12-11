@@ -178,17 +178,17 @@ func (e *EOSPowerballFetcher) fetchAndLogResult() {
     }
 
 	// Log the results
-	fmt.Printf("✅ EOS Powerball %s Result:\n", e.GameType)
-	fmt.Printf("   Date: %s\n", result.Date)
-	fmt.Printf("   Round: %d\n", round)
-	fmt.Printf("   Times: %d\n", result.Times)
-	fmt.Printf("   Balls: %v\n", result.Ball)
-	fmt.Printf("   Power Ball OE: %s, Unover: %s\n", result.PowBallOE, result.PowBallUnover)
-	fmt.Printf("   Def Ball Sum: %s, OE: %s, Unover: %s, Size: %s, Section: %s\n",
-		result.DefBallSum, result.DefBallOE, result.DefBallUnover, result.DefBallSize, result.DefBallSection)
-    fmt.Printf("   Fixed Date Round: %s\n", result.FixedDateRound)
-	fmt.Printf("   Fetched at: %s\n", time.Now().Format("2006-01-02 15:04:05"))
-	fmt.Println("   " + strings.Repeat("-", 50))
+	// fmt.Printf("✅ EOS Powerball %s Result:\n", e.GameType)
+	// fmt.Printf("   Date: %s\n", result.Date)
+	// fmt.Printf("   Round: %d\n", round)
+	// fmt.Printf("   Times: %d\n", result.Times)
+	// fmt.Printf("   Balls: %v\n", result.Ball)
+	// fmt.Printf("   Power Ball OE: %s, Unover: %s\n", result.PowBallOE, result.PowBallUnover)
+	// fmt.Printf("   Def Ball Sum: %s, OE: %s, Unover: %s, Size: %s, Section: %s\n",
+	// 	result.DefBallSum, result.DefBallOE, result.DefBallUnover, result.DefBallSize, result.DefBallSection)
+    // fmt.Printf("   Fixed Date Round: %s\n", result.FixedDateRound)
+	// fmt.Printf("   Fetched at: %s\n", time.Now().Format("2006-01-02 15:04:05"))
+	// fmt.Println("   " + strings.Repeat("-", 50))
 
     // Parse balls
     var d1, d2, d3, d4, d5, pwr int

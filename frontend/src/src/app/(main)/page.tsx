@@ -9,26 +9,30 @@ import Login from "@/components/Auth/Login";
 import api from "@/api";
 import { usePageTitle } from "@/hooks/usePageTitle";
 
-// Import all casino game company logos
-import algLogo from "@/assets/img/casinoGame/alg.png";
-import betgamesLogo from "@/assets/img/casinoGame/betgames.png";
-import dowinLogo from "@/assets/img/casinoGame/dowin.png";
+// Import casino game company logos
 import evolutionLogo from "@/assets/img/casinoGame/evolution.png";
-import onetouchLogo from "@/assets/img/casinoGame/onetouch.png";
-import playtechLogo from "@/assets/img/casinoGame/playtech.png";
-import mojosLogo from "@/assets/img/casinoGame/7mojos.png";
-import agLogo from "@/assets/img/casinoGame/ag.png";
-import allbetLogo from "@/assets/img/casinoGame/allbet.png";
-import botaLogo from "@/assets/img/casinoGame/bota.png";
-import dreamgamingLogo from "@/assets/img/casinoGame/dreamgaming.png";
-import ezugiLogo from "@/assets/img/casinoGame/ezugi.png";
-import hiltonLogo from "@/assets/img/casinoGame/hilton.png";
-import pragmaticLogo from "@/assets/img/casinoGame/pragmatic.png";
-import sexyLogo from "@/assets/img/casinoGame/sexy.png";
-import skywindLogo from "@/assets/img/casinoGame/skywind.png";
-import taishanLogo from "@/assets/img/casinoGame/taishan.png";
 import vivoLogo from "@/assets/img/casinoGame/vivo.png";
-import wmLogo from "@/assets/img/casinoGame/wm.png";
+import ezugiLogo from "@/assets/img/casinoGame/ezugi.png";
+import Live88Logo from "@/assets/img/casinoGame/live88.png";
+import virtualLogo from "@/assets/img/casinoGame/vir2al.png";
+import jiliLogo from "@/assets/img/casinoGame/jili.png";
+import MicroGamingLogo from "@/assets/img/casinoGame/microgaming.png";
+import orientalLogo from "@/assets/img/casinoGame/oriental.png";
+import PGSoftLogo from "@/assets/img/casinoGame/pgsoft.png";
+import PragmaticPlay from "@/assets/img/casinoGame/pragmatic.png";
+import SuperSpade from "@/assets/img/casinoGame/superspade.png";
+import wmLiveLogo from "@/assets/img/casinoGame/wm.png";
+import XProGamingLogo from "@/assets/img/casinoGame/xprogaming.png";
+import absoluteLogo from "@/assets/img/casinoGame/alg.png";
+import inraceLogo from "@/assets/img/casinoGame/inrace.png";
+import globalbetLogo from "@/assets/img/casinoGame/globalbet.png";
+import fachai from "@/assets/img/casinoGame/fachai.png";
+import DreamGameLogo from "@/assets/img/casinoGame/dreamgaming.png";
+import DowinLogo from "@/assets/img/casinoGame/dowin.png";
+import btiLogo from "@/assets/img/casinoGame/bti.png";
+import botaLogo from "@/assets/img/casinoGame/bota.png";
+import bitvilleLogo from "@/assets/img/casinoGame/bitville.png";
+import AsiaGamingLogo from "@/assets/img/casinoGame/ag.png";
 
 const Index: React.FC = () => {
   usePageTitle("TOTOCLUB - Home Page");
@@ -223,25 +227,29 @@ const Index: React.FC = () => {
 
   // Array of casino game companies with their logos and names
   const casinoCompanies = [
-    { name: "Evolution", logo: evolutionLogo },
-    { name: "Taishan", logo: taishanLogo },
-    { name: "Asia Gaming", logo: agLogo },
-    { name: "Ezugi", logo: ezugiLogo },
-    { name: "Allbet", logo: allbetLogo },
-    { name: "Dream Gaming", logo: dreamgamingLogo },
-    { name: "Pragmatic", logo: pragmaticLogo },
-    { name: "Sexy Gaming", logo: sexyLogo },
-    { name: "Vivo Gaming", logo: vivoLogo },
-    { name: "WM Casino", logo: wmLogo },
-    { name: "Betgames", logo: betgamesLogo },
-    { name: "Bota Casino", logo: botaLogo },
-    { name: "Skywind", logo: skywindLogo },
-    { name: "Dowin", logo: dowinLogo },
-    { name: "Playtech", logo: playtechLogo },
-    { name: "OneTouch", logo: onetouchLogo },
-    { name: "ALG Casino", logo: algLogo },
-    { name: "7 Mojos", logo: mojosLogo },
-    { name: "Hilton Casino", logo: hiltonLogo },
+    { name: "evolution", logo: evolutionLogo },
+    { name: "vivo", logo: vivoLogo },
+    { name: "ezugi", logo: ezugiLogo },
+    { name: "live88", logo: Live88Logo },
+    { name: "virtual", logo: virtualLogo },
+    { name: "jili", logo: jiliLogo },
+    { name: "microgaming", logo: MicroGamingLogo },
+    { name: "oriental", logo: orientalLogo },
+    { name: "pgsoft", logo: PGSoftLogo },
+    { name: "pragmatic", logo: PragmaticPlay },
+    { name: "superspade", logo: SuperSpade },
+    { name: "wm", logo: wmLiveLogo },
+    { name: "xprogaming", logo: XProGamingLogo },
+    { name: "alg", logo: absoluteLogo },
+    { name: "inrace", logo: inraceLogo },
+    { name: "globalbet", logo: globalbetLogo },
+    { name: "fachai", logo: fachai },
+    { name: "dreamgaming", logo: DreamGameLogo },
+    { name: "dowin", logo: DowinLogo },
+    { name: "bti", logo: btiLogo },
+    { name: "bota", logo: botaLogo },
+    { name: "bitville", logo: bitvilleLogo },
+    { name: "ag", logo: AsiaGamingLogo },
   ];
 
   const handleCloseLoginModal = () => {

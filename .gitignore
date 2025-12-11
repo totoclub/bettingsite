@@ -1,7 +1,13 @@
 postgres-data/
 get_helm.sh
-.env
 redis-data/
 frontend/src/.env
 frontend/src/.env
 postgres-data.bak
+
+.env
+
+backend/src/.env
+frontend/src/.env
+frontend/src/.env.local
+frontend/src/.env.example

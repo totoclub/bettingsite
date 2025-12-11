@@ -39,7 +39,7 @@ func NewEOS1MinPowerballFetcher() *EOSPowerballFetcher {
 		BaseURL:  "https://ntry.com/data/json/games/eos_powerball/1min/result.json",
 		GameType: "eos1min",
 		Client: &http.Client{
-			Timeout: 30 * time.Second,
+			Timeout: 40 * time.Second,
 		},
 	}
 }
@@ -49,7 +49,7 @@ func NewEOS2MinPowerballFetcher() *EOSPowerballFetcher {
 		BaseURL:  "https://ntry.com/data/json/games/eos_powerball/2min/result.json",
 		GameType: "eos2min",
 		Client: &http.Client{
-			Timeout: 30 * time.Second,
+			Timeout: 110 * time.Second,
 		},
 	}
 }
@@ -59,7 +59,7 @@ func NewEOS3MinPowerballFetcher() *EOSPowerballFetcher {
 		BaseURL:  "https://ntry.com/data/json/games/eos_powerball/3min/result.json",
 		GameType: "eos3min",
 		Client: &http.Client{
-			Timeout: 30 * time.Second,
+			Timeout: 160 * time.Second,
 		},
 	}
 }
@@ -69,7 +69,7 @@ func NewEOS4MinPowerballFetcher() *EOSPowerballFetcher {
 		BaseURL:  "https://ntry.com/data/json/games/eos_powerball/4min/result.json",
 		GameType: "eos4min",
 		Client: &http.Client{
-			Timeout: 30 * time.Second,
+			Timeout: 210 * time.Second,
 		},
 	}
 }
@@ -79,7 +79,7 @@ func NewEOS5MinPowerballFetcher() *EOSPowerballFetcher {
 		BaseURL:  "https://ntry.com/data/json/games/eos_powerball/5min/result.json",
 		GameType: "eos5min",
 		Client: &http.Client{
-			Timeout: 30 * time.Second,
+			Timeout: 260 * time.Second,
 		},
 	}
 }

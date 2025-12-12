@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useState, useEffect, useRef } from "react";
 import { Button, Card, Form, Input, Space } from "antd";
 import { useTranslations } from "next-intl";
 import { useAtom } from "jotai";
@@ -45,6 +45,17 @@ const ProfilePage: React.FC<{checkoutModal: (modal: string) => void}> = (props) 
     const { loading, error, data } = useQuery(GET_PROFILE);
     const [updateProfile, updateResult] = useMutation(UPDATE_PROFILE);
     console.log({ loading, error }, updateResult);
+
+    // Level state values - these will be updated from real-time data
+    const [currentLevelNumber, setCurrentLevelNumber] = useState<number>(1);
+    const [currentLevelPercent, setCurrentLevelPercent] = useState<number>(50);
+    
+    // Animation states
+    const [animatedPercent, setAnimatedPercent] = useState<number>(50);
+    const [displayPercent, setDisplayPercent] = useState<number>(50);
+    const [isLevelChanging, setIsLevelChanging] = useState<boolean>(false);
+    const previousLevelRef = useRef<number>(1);
+    const progressBarRef = useRef<HTMLDivElement>(null);
     const onFinish = async (values: any) => {
       // console.log("Received values of form: ", values);
       const u = {
@@ -67,6 +78,76 @@ const ProfilePage: React.FC<{checkoutModal: (modal: string) => void}> = (props) 
     const onNewPasswordChange = (v: ChangeEvent<HTMLInputElement>) => {
       console.log({ v });
     };
+
+    // Function to get level image based on level number
+    const getLevelImage = (level: number) => {
+      if (level >= 1 && level <= 10) {
+        const levelImages = [Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8, Level9, Level10];
+        return levelImages[level - 1];
+      } else if (level === 11) {
+        return LevelVIP1;
+      } else if (level === 12) {
+        return LevelVIP2;
+      } else if (level >= 13) {
+        return Prumium;
+      }
+      return Level1;
+    };
+
+    // Animate progress bar when percent changes
+    useEffect(() => {
+      const duration = 1000; // 1 second animation
+      const startPercent = animatedPercent;
+      const endPercent = currentLevelPercent;
+      const startTime = Date.now();
+
+      const animate = () => {
+        const now = Date.now();
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Easing function for smooth animation
+        const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+        const easedProgress = easeOutCubic(progress);
+        
+        const currentPercent = startPercent + (endPercent - startPercent) * easedProgress;
+        setAnimatedPercent(currentPercent);
+        setDisplayPercent(Math.round(currentPercent));
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          setAnimatedPercent(endPercent);
+          setDisplayPercent(Math.round(endPercent));
+        }
+      };
+
+      if (startPercent !== endPercent) {
+        requestAnimationFrame(animate);
+      }
+    }, [currentLevelPercent]);
+
+    // Animate level change
+    useEffect(() => {
+      if (previousLevelRef.current !== currentLevelNumber) {
+        setIsLevelChanging(true);
+        const timer = setTimeout(() => {
+          setIsLevelChanging(false);
+        }, 600);
+        previousLevelRef.current = currentLevelNumber;
+        return () => clearTimeout(timer);
+      }
+    }, [currentLevelNumber]);
+
+    // TODO: Connect these to real-time data source
+    // Example: useEffect(() => {
+    //   // Subscribe to real-time updates
+    //   const subscription = subscribeToLevelUpdates((data) => {
+    //     setCurrentLevelNumber(data.level);
+    //     setCurrentLevelPercent(data.percent);
+    //   });
+    //   return () => subscription.unsubscribe();
+    // }, []);
   return (
     <div className="flex justify-center items-center">
       <Form
@@ -129,9 +210,89 @@ const ProfilePage: React.FC<{checkoutModal: (modal: string) => void}> = (props) 
             {t("QNA")}
           </button>
         </div>
-        <div className="mb-4">
-          <Image src={Level1} alt="level" width={100} />
-          <Progress percent={50} strokeColor="#ffc107" />
+        {/* Animated Level Display */}
+        <div className="mb-6 relative">
+          <div className="flex items-center gap-4 mb-3">
+            <div 
+              className={`relative transition-all duration-500 ${
+                isLevelChanging ? 'scale-110 animate-pulse' : 'scale-100'
+              }`}
+              style={{
+                filter: isLevelChanging ? 'drop-shadow(0 0 20px rgba(255, 193, 7, 0.8))' : 'none',
+              }}
+            >
+              <Image 
+                src={getLevelImage(currentLevelNumber)} 
+                alt={`Level ${currentLevelNumber}`} 
+                width={100} 
+                height={100}
+                className="transition-all duration-500"
+                priority
+              />
+              {isLevelChanging && (
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-400/50 to-transparent animate-shimmer" />
+              )}
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-[#edd497] text-lg font-bold">
+                    Level {currentLevelNumber}
+                  </span>
+                  {isLevelChanging && (
+                    <span className="text-yellow-400 text-xs font-semibold animate-bounce">
+                      ↑ Level Up!
+                    </span>
+                  )}
+                </div>
+                <span 
+                  className="text-[#edd497] text-lg font-bold min-w-[50px] text-right transition-all duration-300"
+                  style={{
+                    transform: isLevelChanging ? 'scale(1.2)' : 'scale(1)',
+                    color: isLevelChanging ? '#ffc107' : '#edd497',
+                  }}
+                >
+                  {displayPercent}%
+                </span>
+              </div>
+              <div className="relative w-full h-6 bg-gradient-to-r from-[#2a1810] to-[#3e2a1f] rounded-full overflow-hidden border border-[#5d4a3a] shadow-inner">
+                <div 
+                  ref={progressBarRef}
+                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-[#ffc107] via-[#ffd54f] to-[#ffc107] rounded-full transition-all duration-1000 ease-out shadow-lg"
+                  style={{
+                    width: `${animatedPercent}%`,
+                    boxShadow: animatedPercent > 0 
+                      ? '0 0 10px rgba(255, 193, 7, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.2)' 
+                      : 'none',
+                  }}
+                >
+                  {/* Shimmer effect on progress bar */}
+                  {animatedPercent > 0 && (
+                    <div 
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer"
+                      style={{
+                        width: '30%',
+                      }}
+                    />
+                  )}
+                </div>
+                {/* Progress bar glow effect */}
+                {animatedPercent >= 100 && (
+                  <div 
+                    className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-[#ffc107] via-[#ffd54f] to-[#ffc107] rounded-full animate-pulse"
+                    style={{ opacity: 0.5 }}
+                  />
+                )}
+              </div>
+              {/* Level progress text */}
+              <div className="flex justify-between items-center mt-1 text-xs text-gray-400">
+                <span>Progress to Next Level</span>
+                <span className="text-[#edd497]">
+                  {displayPercent}% Complete
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
           {user.id && data?.profile?.id ? (
             <>

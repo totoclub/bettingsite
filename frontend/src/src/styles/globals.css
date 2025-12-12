@@ -740,3 +740,18 @@ body {
   background-color: #6b7280;
   color: #ffffff;
 }
+
+/* Level Progress Bar Animations */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-200%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+  will-change: transform;
+}

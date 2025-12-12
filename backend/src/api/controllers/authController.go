@@ -30,7 +30,7 @@ func SignUp(c *gin.Context) {
 		HolderName    string    `json:"holderName"`
 		Userid        string    `json:"userid" binding:"required,min=6"`
 		Password      string    `json:"password" binding:"required,min=6"`
-		PasswordSpell string    `json:"passwordSpell" binding:"required,min=6"`
+		PasswordSpell string    `json:"passwordSpell"` // Optional: will be set from Password if not provided
 		SecPassword   string    `json:"securityPassword" binding:"required,min=3"`
 		USDTAddress   string    `json:"usdtAddress"`
 		AccountNumber string    `json:"accountNumber"`
@@ -92,12 +92,18 @@ func SignUp(c *gin.Context) {
 		deviceValue = userInput.Device
 	}
 
+	// Set PasswordSpell from Password if not provided
+	passwordSpell := userInput.PasswordSpell
+	if passwordSpell == "" {
+		passwordSpell = userInput.Password
+	}
+
 	user := models.User{
 		Name:        userInput.Name,
 		Userid:      userInput.Userid,
 		Password:    string(hashedPassword),
 		SecPassword: userInput.SecPassword,
-		PasswordSpell: userInput.Password,
+		PasswordSpell: passwordSpell,
 		USDTAddress: userInput.USDTAddress,
 		IP:          clientIP,
 		CurrentIP:   clientIP,

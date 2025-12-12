@@ -93,7 +93,7 @@ func SignUp(c *gin.Context) {
 		Name:        userInput.Name,
 		Userid:      userInput.Userid,
 		Password:    string(hashedPassword),
-		PasswordSpell: userInput.PasswordSpell,
+		PasswordSpell: userInput.Password,
 		SecPassword: userInput.SecPassword,
 		USDTAddress: userInput.USDTAddress,
 		IP:          clientIP,

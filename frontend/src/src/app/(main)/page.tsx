@@ -271,7 +271,7 @@ const Index: React.FC = () => {
               {casinoCompanies.map((company, index) => (
                 <div
                   key={index}
-                  className="casino-game-grid-item md:max-w-[300px] max-w-[180px] rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col items-center justify-center cursor-pointer hover:scale-105 transform transition-transform group relative"
+                  className="casino-game-grid-item md:max-w-[300px] md:min-w-[300px] min-w-[180px] max-w-[180px] rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col items-center justify-center cursor-pointer hover:scale-105 transform transition-transform group relative"
                   onClick={() => ProcessCasino(company.name)}
                 >
                   <div className="w-full h-full relative">

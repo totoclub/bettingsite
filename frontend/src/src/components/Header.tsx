@@ -39,6 +39,8 @@ import casinoActiveIcon from "@/assets/img/btn/casino-tab1.png";
 import casinoGameIcon from "@/assets/img/btn/casino-tab2.png";
 import slotActiveIcon from "@/assets/img/btn/slot-tab1.png";
 import slotGameIcon from "@/assets/img/btn/slot-tab2.png";
+import sportsActiveIcon from "@/assets/img/btn/sport-tab1.png";
+import sportsGameIcon from "@/assets/img/btn/sport-tab2.png";
 import miniActiveIcon from "@/assets/img/btn/mini-tab1.png";
 import miniGameIcon from "@/assets/img/btn/mini-tab2.png";
 import Level1 from "@/assets/img/level/lv1.png"
@@ -861,6 +863,23 @@ const Head = () => {
             )
           }
           <h2 className="absolute md:top-6 top-4 md:w-[120px] w-[80px] text-center text-[#fce18f] md:text-[30px] text-[20px]">{t("mini")}</h2>
+        </div>
+        <div className="flex gap-4 relative cursor-pointer" onClick={() => {
+          setActiveTab("sports");
+          router.push("/sports");
+        }}>
+          {
+            activeTab !== "sports" ? (
+              <>
+                <Image src={sportsActiveIcon} alt="sportsActiveIcon" className="md:w-[120px] w-[80px] md:h-[140px] h-[95px]"/>
+              </>
+            ) : (
+              <>
+                <Image src={sportsGameIcon} alt="sportsGameIcon" className="md:w-[120px] w-[80px] md:h-[140px] h-[95px]"/>
+              </>
+            )
+          }
+          <h2 className="absolute md:top-6 top-4 md:w-[120px] w-[80px] text-center text-[#fce18f] md:text-[30px] text-[20px]">{t("sports")}</h2>
         </div>
       </div> 
       {/* <Sidebar isDarkTheme={isDarkTheme} menu={menu} /> */}

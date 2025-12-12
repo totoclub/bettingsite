@@ -2466,5 +2466,7 @@
   "partner/losingMoney" : "Losing Money",
   "admin/noData" : "Admin No Data",
   "depoistRequest" : "Deposit Request",
-  "blocklist" : "Blocklist"
+  "blocklist" : "Blocklist",
+  "nextLevelTargetValue" : "Next Level Target Value",
+  "chargingBonusSetting" : "Charging Bonus Setting"
 } 

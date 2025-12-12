@@ -380,6 +380,15 @@ func (h *HonorLinkFetcher) processTransaction(hlTransaction HonorLinkTransaction
 			Status:        "success",
 			TransactionAt:     hlTransaction.CreatedAt,
 		}
+
+		if hlTransaction.Type == "bet" {
+			// plus the betting amount to profile wager amount
+			if err := initializers.DB.Model(&profile).Update("wager", profile.Wager + math.Abs(hlTransaction.Amount)).Error; err != nil {
+				fmt.Printf("❌ Error updating user wager value: %v\n", err)
+				return
+			}
+		}
+
 		if err := initializers.DB.Create(&transactionRolling).Error; err != nil {
 			fmt.Printf("❌ Error creating transaction record: %v\n", err)
 			return

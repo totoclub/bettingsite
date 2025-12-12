@@ -7,6 +7,9 @@ export interface Level {
   levelType: "regular" | "vip" | "premium";
   isActive: boolean;
   
+  // Level Progression
+  nextLevelTargetValue: number;
+  
   // Deposit/Withdrawal Limits
   minimumDepositAmount: number;
   maximumDepositAmount: number;

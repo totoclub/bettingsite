@@ -13,6 +13,9 @@ type Level struct {
 	LevelType   string `json:"levelType" gorm:"not null"`   // "regular", "vip", "premium"
 	IsActive    bool   `json:"isActive" gorm:"default:true"`
 
+	// Level Progression
+	NextLevelTargetValue float64 `json:"nextLevelTargetValue" gorm:"default:0"` // Target value to reach next level
+
 	// Deposit/Withdrawal Limits
 	MinimumDepositAmount         float64 `json:"minimumDepositAmount" gorm:"default:0"`
 	MaximumDepositAmount         float64 `json:"maximumDepositAmount" gorm:"default:0"`

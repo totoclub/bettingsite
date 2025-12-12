@@ -29,6 +29,7 @@ type Profile struct {
 
 	Balance float64 `json:"balance" gorm:"type:float;precision:10;scale:2;default:0"`
 	Roll    float64 `json:"roll" gorm:"default:0"`
+	Wager   float64 `json:"wager" gorm:"type:float;precision:10;scale:2;default:0"`
 	Point   int32   `json:"point"  gorm:"default:0"`
 	Comp    int32   `json:"comp" gorm:"default:0"`
 	Level   int32   `json:"level" gorm:"default:1"`

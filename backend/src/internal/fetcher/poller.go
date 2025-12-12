@@ -38,11 +38,11 @@ func StartPolling() {
 		}
 	}()
 
-	// Start HonorLink fetcher
-	honorLinkFetcher := NewHonorLinkFetcher()
-	honorLinkFetcher.StartPeriodicFetching()
+	// // Start HonorLink fetcher
+	// honorLinkFetcher := NewHonorLinkFetcher()
+	// honorLinkFetcher.StartPeriodicFetching()
 
-	// Start EOS Powerball fetcher
-	eosPowerballFetcher := NewEOS1MinPowerballFetcher()
-	eosPowerballFetcher.StartPeriodicFetching()
+	// // Start EOS Powerball fetcher
+	// eosPowerballFetcher := NewEOS1MinPowerballFetcher()
+	// eosPowerballFetcher.StartPeriodicFetching()
 }

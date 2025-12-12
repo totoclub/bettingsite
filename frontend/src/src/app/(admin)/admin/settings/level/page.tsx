@@ -651,6 +651,12 @@ export default function LevelPage() {
                             onFinish={handleUpdateLevel}
                             labelCol={{ span: 12 }}
                         >
+                            {/* Next level target value */}
+                            <Form.Item label={t("nextLevelTargetValue")} name="nextLevelTargetValue">
+                                <InputNumber min={0} addonAfter={<span style={{ display: 'inline-block', width: '40px', textAlign: 'center' }}>{t("won")}</span>} />
+                            </Form.Item>
+
+
                             <Form.Item label={t("minimumDepositAmount")} name="minimumDepositAmount">
                                 <InputNumber min={0} addonAfter={<span style={{ display: 'inline-block', width: '40px', textAlign: 'center' }}>{t("won")}</span>} />
                             </Form.Item>

@@ -681,6 +681,14 @@ func PlaceMiniBet(c *gin.Context) {
 		Explation:     fmt.Sprintf("%d", powerballBet.ID),
 		Status:        "A",
 	}
+	
+	// plus the betting amount to profile wager amount
+	if err := tx.Model(&profile).Update("wager", profile.Wager + amount).Error; err != nil {
+		tx.Rollback()
+		format_errors.InternalServerError(c, err)
+		return
+	}
+
 	if err := tx.Create(&transaction).Error; err != nil {
 		tx.Rollback()
 		format_errors.InternalServerError(c, err)

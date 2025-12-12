@@ -1,12 +1,15 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import { Badge, Button, Dropdown, Space, Tag, Typography, notification } from "antd";
-import { BellOutlined } from "@ant-design/icons";
+import { Badge, Button, Dropdown, Space, Tag, Typography, notification, Spin, Empty } from "antd";
+import { BellOutlined, CheckCircleOutlined, ClockCircleOutlined } from "@ant-design/icons";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import apiCall, { wsURL } from "@/api";
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
 
 const { Text } = Typography;
 
@@ -230,19 +233,19 @@ const NotificationButton: React.FC = () => {
   const getAlertTypeColor = (type: string) => {
     switch (type) {
       case "deposit":
-        return "green";
+        return "#52c41a";
       case "withdrawal":
-        return "orange";
+        return "#fa8c16";
       case "qna":
-        return "blue";
+        return "#1890ff";
       case "point":
-        return "purple";
+        return "#722ed1";
       case "rollingExchange":
-        return "cyan";
+        return "#13c2c2";
       case "signup":
-        return "gold";
+        return "#faad14";
       default:
-        return "default";
+        return "#8c8c8c";
     }
   };
 
@@ -265,11 +268,56 @@ const NotificationButton: React.FC = () => {
     }
   };
 
+  const getAlertTypeIcon = (type: string) => {
+    switch (type) {
+      case "deposit":
+        return "💰";
+      case "withdrawal":
+        return "💸";
+      case "qna":
+        return "❓";
+      case "point":
+        return "⭐";
+      case "rollingExchange":
+        return "🔄";
+      case "signup":
+        return "👤";
+      default:
+        return "🔔";
+    }
+  };
+
   console.log("Current alerts state:", alerts.length, "unread count:", unreadCount, "alerts:", alerts);
   
   // Use alerts if available, otherwise show message
   const dropdownItems = alerts.length > 0
     ? [
+        {
+          key: "header",
+          label: (
+            <div style={{ 
+              // padding: "12px 16px", 
+              borderBottom: "2px solid #f0f0f0",
+              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              // margin: "-8px -8px 8px -8px"
+            }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <Text strong style={{ color: "#fff", fontSize: "14px" }}>
+                  {t("notifications") || "Notifications"}
+                </Text>
+                {unreadCount > 0 && (
+                  <Badge 
+                    count={unreadCount} 
+                    style={{ 
+                      backgroundColor: "#ff4d4f",
+                      boxShadow: "0 0 0 2px #fff"
+                    }}
+                  />
+                )}
+              </div>
+            </div>
+          ),
+        },
         ...alerts.slice(0, 10).map((alert) => ({
           key: alert.id.toString(),
           label: (
@@ -279,69 +327,161 @@ const NotificationButton: React.FC = () => {
                 await handleAlertClick(alert);
               }}
               style={{
-                padding: "8px",
+                padding: "12px 16px",
                 cursor: "pointer",
-                backgroundColor: alert.isRead ? "transparent" : "#f0f0f0",
+                backgroundColor: alert.isRead ? "#ffffff" : "#f6f8ff",
+                borderLeft: alert.isRead ? "3px solid transparent" : `3px solid ${getAlertTypeColor(alert.type)}`,
+                transition: "all 0.2s ease",
+                position: "relative",
+                marginBottom: "4px",
+                borderRadius: "6px",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = alert.isRead ? "#f5f5f5" : "#e6f0ff";
+                e.currentTarget.style.transform = "translateX(2px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = alert.isRead ? "#ffffff" : "#f6f8ff";
+                e.currentTarget.style.transform = "translateX(0)";
               }}
             >
-              <Space direction="vertical" size="small" style={{ width: "100%" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <Tag color={getAlertTypeColor(alert.type)}>
-                    {getAlertTypeLabel(alert.type)}
-                  </Tag>
-                  {!alert.isRead && <Badge status="processing" />}
+              <div style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
+                <div style={{
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "8px",
+                  background: `linear-gradient(135deg, ${getAlertTypeColor(alert.type)}15, ${getAlertTypeColor(alert.type)}25)`,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "18px",
+                  flexShrink: 0,
+                }}>
+                  {getAlertTypeIcon(alert.type)}
                 </div>
-                <Text strong style={{ fontSize: "12px" }}>
-                  {alert.title}
-                </Text>
-                <Text type="secondary" style={{ fontSize: "11px" }}>
-                  {alert.message.length > 50
-                    ? `${alert.message.substring(0, 50)}...`
-                    : alert.message}
-                </Text>
-                <Text type="secondary" style={{ fontSize: "10px" }}>
-                  {dayjs(alert.createdAt).format("YYYY-MM-DD HH:mm:ss")}
-                </Text>
-              </Space>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "6px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px", flex: 1 }}>
+                      <Tag 
+                        color={getAlertTypeColor(alert.type)}
+                        style={{ 
+                          margin: 0,
+                          borderRadius: "4px",
+                          border: "none",
+                          fontWeight: 500,
+                          fontSize: "11px",
+                        }}
+                      >
+                        {getAlertTypeLabel(alert.type)}
+                      </Tag>
+                      {!alert.isRead && (
+                        <div style={{
+                          width: "8px",
+                          height: "8px",
+                          borderRadius: "50%",
+                          backgroundColor: getAlertTypeColor(alert.type),
+                          boxShadow: `0 0 6px ${getAlertTypeColor(alert.type)}80`,
+                          animation: "pulse 2s infinite",
+                        }} />
+                      )}
+                    </div>
+                    {alert.isRead ? (
+                      <CheckCircleOutlined style={{ color: "#52c41a", fontSize: "14px" }} />
+                    ) : (
+                      <ClockCircleOutlined style={{ color: getAlertTypeColor(alert.type), fontSize: "14px" }} />
+                    )}
+                  </div>
+                  <Text 
+                    strong 
+                    style={{ 
+                      fontSize: "13px",
+                      color: alert.isRead ? "#595959" : "#262626",
+                      display: "block",
+                      marginBottom: "4px",
+                      lineHeight: "1.4",
+                    }}
+                  >
+                    {alert.title}
+                  </Text>
+                  <Text 
+                    type="secondary" 
+                    style={{ 
+                      fontSize: "12px",
+                      display: "block",
+                      marginBottom: "6px",
+                      lineHeight: "1.4",
+                      color: "#8c8c8c",
+                    }}
+                  >
+                    {alert.message.length > 60
+                      ? `${alert.message.substring(0, 60)}...`
+                      : alert.message}
+                  </Text>
+                  <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                    <Text 
+                      type="secondary" 
+                      style={{ 
+                        fontSize: "11px",
+                        color: "#bfbfbf",
+                      }}
+                    >
+                      {dayjs(alert.createdAt).fromNow()}
+                    </Text>
+                    <span style={{ color: "#d9d9d9", margin: "0 4px" }}>•</span>
+                    <Text 
+                      type="secondary" 
+                      style={{ 
+                        fontSize: "11px",
+                        color: "#bfbfbf",
+                      }}
+                    >
+                      {dayjs(alert.createdAt).format("MMM DD, HH:mm")}
+                    </Text>
+                  </div>
+                </div>
+              </div>
             </div>
           ),
         })),
         {
           key: "view-all",
           label: (
-            <div style={{ padding: "8px", borderTop: "1px solid #f0f0f0", textAlign: "center" }}>
+            <div style={{ 
+              padding: "12px 16px", 
+              borderTop: "1px solid #f0f0f0", 
+              textAlign: "center",
+              background: "#fafafa",
+              marginTop: "8px",
+            }}>
               <Button
-                type="link"
-                onClick={() => router.push("/admin/alert")}
-                style={{ width: "100%" }}
+                type="primary"
+                onClick={() => {
+                  setDropdownOpen(false);
+                  router.push("/admin/alert");
+                }}
+                style={{ 
+                  width: "100%",
+                  borderRadius: "6px",
+                  height: "36px",
+                  fontWeight: 500,
+                }}
               >
-                {t("viewAll") || "View All"}
+                {t("viewAll") || "View All Notifications"}
               </Button>
             </div>
           ),
         },
       ]
-    : unreadCount > 0
+    : loading
     ? [
         {
           key: "loading",
           label: (
-            <div style={{ padding: "16px", textAlign: "center" }}>
-              <Text type="secondary">{t("loadingNotifications") || "Loading notifications..."}</Text>
-            </div>
-          ),
-        },
-        {
-          key: "view-all",
-          label: (
-            <div style={{ padding: "8px", borderTop: "1px solid #f0f0f0", textAlign: "center" }}>
-              <Button
-                type="link"
-                onClick={() => router.push("/admin/alert")}
-                style={{ width: "100%" }}
-              >
-                {t("viewAll") || "View All"}
-              </Button>
+            <div style={{ padding: "40px 20px", textAlign: "center" }}>
+              <Spin size="large" />
+              <div style={{ marginTop: "16px" }}>
+                <Text type="secondary">{t("loadingNotifications") || "Loading notifications..."}</Text>
+              </div>
             </div>
           ),
         },
@@ -350,21 +490,40 @@ const NotificationButton: React.FC = () => {
         {
           key: "no-alerts",
           label: (
-            <div style={{ padding: "16px", textAlign: "center" }}>
-              <Text type="secondary">{t("noNewNotifications") || "No new notifications"}</Text>
+            <div style={{ padding: "40px 20px", textAlign: "center" }}>
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description={
+                  <Text type="secondary" style={{ fontSize: "13px" }}>
+                    {t("noNewNotifications") || "No new notifications"}
+                  </Text>
+                }
+              />
             </div>
           ),
         },
         {
           key: "view-all",
           label: (
-            <div style={{ padding: "8px", borderTop: "1px solid #f0f0f0", textAlign: "center" }}>
+            <div style={{ 
+              padding: "12px 16px", 
+              borderTop: "1px solid #f0f0f0", 
+              textAlign: "center",
+              background: "#fafafa",
+            }}>
               <Button
-                type="link"
-                onClick={() => router.push("/admin/alert")}
-                style={{ width: "100%" }}
+                type="default"
+                onClick={() => {
+                  setDropdownOpen(false);
+                  router.push("/admin/alert");
+                }}
+                style={{ 
+                  width: "100%",
+                  borderRadius: "6px",
+                  height: "36px",
+                }}
               >
-                {t("viewAll") || "View All"}
+                {t("viewAll") || "View All Notifications"}
               </Button>
             </div>
           ),
@@ -384,16 +543,40 @@ const NotificationButton: React.FC = () => {
         trigger={["click"]}
         placement="bottomRight"
         popupRender={(menu) => (
-          <div style={{ minWidth: 350, maxWidth: 400 }}>
+          <div style={{ 
+            minWidth: 380, 
+            maxWidth: 420,
+            maxHeight: "70vh",
+            overflowY: "auto",
+            borderRadius: "12px",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+            background: "#fff",
+          }}>
             {menu}
           </div>
         )}
       >
-        <Badge count={unreadCount} size="small">
+        <Badge 
+          count={unreadCount} 
+          size="small"
+          offset={[-4, 4]}
+          style={{
+            boxShadow: unreadCount > 0 ? "0 0 0 2px #fff" : "none",
+          }}
+        >
           <Button
             type="text"
             icon={<BellOutlined />}
-            style={{ fontSize: "18px" }}
+            className={`notification-bell-button ${unreadCount > 0 ? 'has-unread' : ''}`}
+            style={{ 
+              fontSize: "20px",
+              width: "40px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: "8px",
+              color: unreadCount > 0 ? "#1890ff" : "inherit",
+            }}
           />
         </Badge>
       </Dropdown>

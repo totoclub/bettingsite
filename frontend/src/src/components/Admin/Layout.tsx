@@ -1132,7 +1132,7 @@ export default function AdminRootLayout({
                       onClick={onThemeChange}
                       className="!w-10 !h-10 !hidden"
                     />
-
+                    {/* notification button */}
                     <NotificationButton />
                     <Dropdown
                       className="flex gap-2 items-center"

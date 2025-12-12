@@ -10,7 +10,6 @@ import (
 	"github.com/hotbrainy/go-betting/backend/db/initializers"
 	"github.com/hotbrainy/go-betting/backend/internal/kafka"
 	"github.com/hotbrainy/go-betting/backend/internal/models"
-	"gorm.io/gorm"
 )
 
 type MatchOdds struct {
@@ -85,7 +84,7 @@ func updateUserLevels() {
 
 	// Get all profiles with wager
 	var profiles []models.Profile
-	if err := initializers.DB.Preload("User").Find(&profiles).Error; err != nil {
+	if err := initializers.DB.Find(&profiles).Error; err != nil {
 		log.Printf("⚠️ Failed to fetch profiles: %v", err)
 		return
 	}

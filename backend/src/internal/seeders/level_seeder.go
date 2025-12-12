@@ -5,6 +5,24 @@ import (
 	"github.com/hotbrainy/go-betting/backend/internal/models"
 )
 
+// Helper function to calculate NextLevelTargetValue based on level number
+// Level 1: 15000
+// Level 2: 3 * Level 1 = 45000
+// Level 3: 3 * Level 2 = 135000
+// Level 4: 3 * Level 3 = 405000
+// etc.
+func calculateNextLevelTargetValue(levelNumber int) float64 {
+	if levelNumber == 1 {
+		return 15000.0
+	}
+	// Calculate: 15000 * (3 ^ (levelNumber - 1))
+	result := 15000.0
+	for i := 1; i < levelNumber; i++ {
+		result *= 3.0
+	}
+	return result
+}
+
 // Helper function to create a level with default values
 func createLevel(name string, levelNumber int, levelType string, sortOrder int, description string) models.Level {
 	baseBonus := float64(levelNumber) * 0.5
@@ -13,6 +31,9 @@ func createLevel(name string, levelNumber int, levelType string, sortOrder int, 
 
 	return models.Level{
 		Name: name, LevelNumber: levelNumber, LevelType: levelType, IsActive: true,
+		
+		// Level Progression
+		NextLevelTargetValue: calculateNextLevelTargetValue(levelNumber),
 
 		// Deposit/Withdrawal Limits
 		MinimumDepositAmount: maxDeposit * 0.1, MaximumDepositAmount: maxDeposit,

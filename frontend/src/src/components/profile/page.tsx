@@ -10,6 +10,7 @@ import Image from "next/image";
 import modalImage from '@/assets/img/main/modal-head.png';
 import { SiDepositphotos } from "react-icons/si";
 import { Progress } from "antd";
+import api from "@/api";
 
 import Level1 from "@/assets/img/level/lv1.png"
 import Level2 from "@/assets/img/level/lv2.png"
@@ -44,15 +45,24 @@ const ProfilePage: React.FC<{checkoutModal: (modal: string) => void}> = (props) 
     const [user] = useAtom<any>(userState);
     const { loading, error, data } = useQuery(GET_PROFILE);
     const [updateProfile, updateResult] = useMutation(UPDATE_PROFILE);
-    console.log({ loading, error }, updateResult);
 
     // Level state values - these will be updated from real-time data
     const [currentLevelNumber, setCurrentLevelNumber] = useState<number>(1);
-    const [currentLevelPercent, setCurrentLevelPercent] = useState<number>(50);
+    const [currentLevelPercent, setCurrentLevelPercent] = useState<number>(0);
+    
+    // Wager and levels data
+    const [wager, setWager] = useState<number>(0);
+    const [levels, setLevels] = useState<Array<{
+        id: number;
+        name: string;
+        levelNumber: number;
+        levelType: string;
+        nextLevelTargetValue: number;
+    }>>([]);
     
     // Animation states
-    const [animatedPercent, setAnimatedPercent] = useState<number>(50);
-    const [displayPercent, setDisplayPercent] = useState<number>(50);
+    const [animatedPercent, setAnimatedPercent] = useState<number>(0);
+    const [displayPercent, setDisplayPercent] = useState<number>(0);
     const [isLevelChanging, setIsLevelChanging] = useState<boolean>(false);
     const previousLevelRef = useRef<number>(1);
     const progressBarRef = useRef<HTMLDivElement>(null);
@@ -139,15 +149,106 @@ const ProfilePage: React.FC<{checkoutModal: (modal: string) => void}> = (props) 
       }
     }, [currentLevelNumber]);
 
-    // TODO: Connect these to real-time data source
-    // Example: useEffect(() => {
-    //   // Subscribe to real-time updates
-    //   const subscription = subscribeToLevelUpdates((data) => {
-    //     setCurrentLevelNumber(data.level);
-    //     setCurrentLevelPercent(data.percent);
-    //   });
-    //   return () => subscription.unsubscribe();
-    // }, []);
+    // Fetch wager and level targets
+    const fetchWagerAndLevelTargets = async () => {
+        try {
+            const response = await api("user/wager-and-level-targets", {
+                method: "GET",
+            });
+            
+            console.log("API Response:", response);
+            
+            if (response.wager !== undefined) {
+                setWager(response.wager);
+            }
+            
+            if (response.levels && Array.isArray(response.levels)) {
+                setLevels(response.levels);
+                
+                // Calculate current level and progress based on wager
+                const sortedLevels = [...response.levels].sort((a, b) => a.levelNumber - b.levelNumber);
+                const currentWager = response.wager || 0;
+                
+                console.log("Sorted levels:", sortedLevels);
+                console.log("Current wager:", currentWager);
+                
+                // Find current level: the highest level where wager < nextLevelTargetValue
+                let currentLevel = sortedLevels[0]; // Default to first level
+                let previousLevel: typeof sortedLevels[0] | null = null;
+                
+                for (let i = 0; i < sortedLevels.length; i++) {
+                    if (currentWager < sortedLevels[i].nextLevelTargetValue) {
+                        currentLevel = sortedLevels[i];
+                        // Previous level is the one before current (if exists)
+                        if (i > 0) {
+                            previousLevel = sortedLevels[i - 1];
+                        }
+                        break;
+                    }
+                }
+                
+                // If wager exceeds all levels, user is at max level
+                if (currentWager >= sortedLevels[sortedLevels.length - 1].nextLevelTargetValue) {
+                    currentLevel = sortedLevels[sortedLevels.length - 1];
+                    previousLevel = sortedLevels[sortedLevels.length - 2] || null;
+                }
+                
+                console.log("Current level:", currentLevel);
+                console.log("Previous level:", previousLevel);
+                
+                setCurrentLevelNumber(currentLevel.levelNumber);
+                
+                // Calculate progress percentage
+                // Formula:
+                // 1. Level difference value = nextLevelTargetValue of current level - nextLevelTargetValue of previous level (or 0 if level 1)
+                // 2. Wager value for current level = wager - nextLevelTargetValue of previous level (or wager if level 1)
+                // 3. Percentage = (wager value for current level / level difference value) * 100
+                // Example: Level 1 (15000), Level 2 (50000), wager = 100
+                // - If at Level 1: level difference = 15000 - 0 = 15000, wager value = 100 - 0 = 100, percent = (100 / 15000) * 100
+                // - If at Level 2: level difference = 50000 - 15000 = 35000, wager value = 100 - 15000 = -14900 (but should be 0 if negative)
+                
+                const previousLevelTarget = previousLevel ? previousLevel.nextLevelTargetValue : 0;
+                const currentLevelTarget = currentLevel.nextLevelTargetValue;
+                
+                // Level difference value = current level target - previous level target
+                const levelDifference = currentLevelTarget - previousLevelTarget;
+                
+                // Wager value for current level = wager - previous level target (minimum 0)
+                const wagerForCurrentLevel = Math.max(0, currentWager - previousLevelTarget);
+                
+                console.log('Level Calculation:', {
+                    currentLevel: currentLevel.levelNumber,
+                    previousLevel: previousLevel ? previousLevel.levelNumber : 0,
+                    previousLevelTarget,
+                    currentLevelTarget,
+                    levelDifference,
+                    currentWager,
+                    wagerForCurrentLevel,
+                    calculatedProgress: levelDifference > 0 ? (wagerForCurrentLevel / levelDifference) * 100 : 0
+                });
+                
+                const progress = levelDifference > 0 ? (wagerForCurrentLevel / levelDifference) * 100 : 0;
+                console.log("Setting progress to:", progress);
+                setCurrentLevelPercent(Math.max(0, Math.min(100, progress)));
+            } else {
+                console.warn("No levels found in response:", response);
+            }
+        } catch (error) {
+            console.error("Error fetching wager and level targets:", error);
+        }
+    };
+
+    // Poll wager and level targets every 5 seconds
+    useEffect(() => {
+        // Initial fetch
+        fetchWagerAndLevelTargets();
+        
+        // Set up interval to fetch every 5 seconds
+        const interval = setInterval(fetchWagerAndLevelTargets, 5000);
+        
+        // Cleanup interval on component unmount
+        return () => clearInterval(interval);
+    }, []);
   return (
     <div className="flex justify-center items-center">
       <Form

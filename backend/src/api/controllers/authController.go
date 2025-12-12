@@ -497,6 +497,55 @@ func CheckPassword(c *gin.Context) {
 
 }
 
+// GetWagerAndLevelTargets returns the current user's wager value and all levels with their nextLevelTargetValue
+func GetWagerAndLevelTargets(c *gin.Context) {
+	// Get authenticated user
+	user, err := helpers.GetGinAuthUser(c)
+	if err != nil {
+		format_errors.InternalServerError(c, err)
+		return
+	}
+
+	// Get user's profile with wager
+	var profile models.Profile
+	if err := initializers.DB.Where("user_id = ?", user.ID).First(&profile).Error; err != nil {
+		format_errors.InternalServerError(c, err)
+		return
+	}
+
+	// Get all levels with nextLevelTargetValue
+	var levels []models.Level
+	if err := initializers.DB.Select("id, name, level_number, level_type, next_level_target_value").Order("level_number ASC").Find(&levels).Error; err != nil {
+		format_errors.InternalServerError(c, err)
+		return
+	}
+
+	// Build response with levels data
+	type LevelTarget struct {
+		ID                 uint    `json:"id"`
+		Name               string  `json:"name"`
+		LevelNumber        int     `json:"levelNumber"`
+		LevelType          string  `json:"levelType"`
+		NextLevelTargetValue float64 `json:"nextLevelTargetValue"`
+	}
+
+	levelTargets := make([]LevelTarget, len(levels))
+	for i, level := range levels {
+		levelTargets[i] = LevelTarget{
+			ID:                  level.ID,
+			Name:                level.Name,
+			LevelNumber:         level.LevelNumber,
+			LevelType:           level.LevelType,
+			NextLevelTargetValue: level.NextLevelTargetValue,
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"wager": profile.Wager,
+		"levels": levelTargets,
+	})
+}
+
 func GetInfo(c *gin.Context) {
 	today := time.Now().Truncate(24 * time.Hour)
 	now := time.Now()

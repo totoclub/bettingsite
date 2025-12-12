@@ -14,6 +14,7 @@ func GetUserRoute(r *gin.RouterGroup) {
 	r.GET("/myprofile", controllers.GetMyProfile)
 	r.POST("/me", controllers.UpdateMe)
 	r.GET("/getInfo", controllers.GetInfo)
+	r.GET("/wager-and-level-targets", controllers.GetWagerAndLevelTargets)
 	// Category routes
 	catRouter := r.Group("/categories")
 	{

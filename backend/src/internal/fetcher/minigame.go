@@ -275,6 +275,9 @@ func (e *EOSPowerballFetcher) fetchAndLogResult() {
                         won = true
                     } else if isUnderOverValue(translatedText) && translatedText == result.DefBallUnover {
                         won = true
+                    } else if translatedText == result.DefBallSize || translatedText == result.DefBallSection || (result.DefBallSum != "" && translatedText == result.DefBallSum) {
+                        // Size, Section, or Sum bet
+                        won = true
                     }
                 }
             } else if bet.BetType == "combination" && len(bet.BetBalls) > 0 {
@@ -295,6 +298,9 @@ func (e *EOSPowerballFetcher) fetchAndLogResult() {
                             ballWon = true
                         } else if isUnderOverValue(translatedText) && translatedText == result.DefBallUnover {
                             ballWon = true
+                        } else if translatedText == result.DefBallSize || translatedText == result.DefBallSection || (result.DefBallSum != "" && translatedText == result.DefBallSum) {
+                            // Size, Section, or Sum bet
+                            ballWon = true
                         }
                     }
                     
@@ -313,43 +319,43 @@ func (e *EOSPowerballFetcher) fetchAndLogResult() {
             case "powerball":
                 // Powerball: Odd/Even bets check PowBallOE, Under/Over bets check PowBallUnover
                 if isOddEvenValue(translatedPick) {
-                // Bet is on Odd/Even - check the Odd/Even result field
-                if translatedPick == result.PowBallOE {
+                    // Bet is on Odd/Even - check the Odd/Even result field
+                    if translatedPick == result.PowBallOE {
+                        won = true
+                    }
+                } else if isUnderOverValue(translatedPick) {
+                    // Bet is on Under/Over - check the Under/Over result field
+                    if translatedPick == result.PowBallUnover {
+                        won = true
+                    }
+                }
+            case "normalball":
+                // Normalball can bet on various metrics - check the appropriate result field
+                if isOddEvenValue(translatedPick) {
+                    // Odd/Even bet
+                    if translatedPick == result.DefBallOE {
+                        won = true
+                    }
+                } else if isUnderOverValue(translatedPick) {
+                    // Under/Over bet
+                    if translatedPick == result.DefBallUnover {
+                        won = true
+                    }
+                } else if translatedPick == result.DefBallSize || translatedPick == result.DefBallSection || (result.DefBallSum != "" && translatedPick == result.DefBallSum) {
+                    // Size, Section, or Sum bet
                     won = true
                 }
-            } else if isUnderOverValue(translatedPick) {
-                // Bet is on Under/Over - check the Under/Over result field
-                if translatedPick == result.PowBallUnover {
-                    won = true
+            default:
+                // Fallback: check against computed powerball odd/even or under/over
+                if isOddEvenValue(translatedPick) {
+                    if translatedPick == isOdd(pwr) {
+                        won = true
+                    }
+                } else if isUnderOverValue(translatedPick) {
+                    if translatedPick == overUnder(pwr) {
+                        won = true
+                    }
                 }
-            }
-        case "normalball":
-            // Normalball can bet on various metrics - check the appropriate result field
-            if isOddEvenValue(translatedPick) {
-                // Odd/Even bet
-                if translatedPick == result.DefBallOE {
-                    won = true
-                }
-            } else if isUnderOverValue(translatedPick) {
-                // Under/Over bet
-                if translatedPick == result.DefBallUnover {
-                    won = true
-                }
-            } else if translatedPick == result.DefBallSize || translatedPick == result.DefBallSection || (result.DefBallSum != "" && translatedPick == result.DefBallSum) {
-                // Size, Section, or Sum bet
-                won = true
-            }
-        default:
-            // Fallback: check against computed powerball odd/even or under/over
-            if isOddEvenValue(translatedPick) {
-                if translatedPick == isOdd(pwr) {
-                    won = true
-                }
-            } else if isUnderOverValue(translatedPick) {
-                if translatedPick == overUnder(pwr) {
-                    won = true
-                }
-            }
             }
         }
 

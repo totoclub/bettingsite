@@ -526,8 +526,7 @@ func (ur *userReader) GetDistributorDetails(ctx context.Context, filters []*mode
 		user.MembershipWithdrawal = membershipWithdrawal
 		user.TotalWithdrawal = totalWithdrawal
 		user.NumberOfMembers = int(numberOfMembers)
-		user.RollingHoldings = user.Profile.Balance // Money in hand is the current balance
-
+		
 		// Calculate rolling holdings (sum of all rolling fields)
 		user.RollingHoldings = user.Live + user.Slot + user.Hold +
 			user.MiniDanpolRolling + user.MiniCombinationRolling +
@@ -538,8 +537,11 @@ func (ur *userReader) GetDistributorDetails(ctx context.Context, filters []*mode
 			user.MgmRolling + user.TouchRolling
 
 		// Calculate rolling rate (percentage)
-		if user.RollingHoldings > 0 {
-			user.RollingRate = (user.RollingHoldings / (user.MembershipDeposit + user.MembershipWithdrawal)) * 100
+		denominator := user.MembershipDeposit + user.MembershipWithdrawal
+		if user.RollingHoldings > 0 && denominator > 0 {
+			user.RollingRate = (user.RollingHoldings / denominator) * 100
+		} else {
+			user.RollingRate = 0
 		}
 
 		// Calculate rolling transition
@@ -649,7 +651,9 @@ func (ur *userReader) GetDistributorDetails(ctx context.Context, filters []*mode
 
 		// Calculate partnership statistics
 		user.PartnershipRolling = user.RollingHoldings
-		user.PartnershipMoneyInHand = user.Profile.Balance
+		if user.Profile != nil {
+			user.PartnershipMoneyInHand = user.Profile.Balance
+		}
 	}
 
 	return &model.UserList{

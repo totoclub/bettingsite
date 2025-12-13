@@ -83,17 +83,27 @@ const DomainSettingPage: React.FC = () => {
     },
   ];
 
-  const labelRenderer = (props: any) =>
-    props.value.toString() == "100"
-      ? "Premium"
-      : (parseInt(props.value.toString()) > 100 ? "VIP " : "Level ") +
-        props.value;
+  const labelRenderer = (props: any) => {
+    const val = parseInt(props.value.toString());
+    if (val === 15) return "Premium";
+    if (val === 13) return "VIP 1";
+    if (val === 14) return "VIP 2";
+    if (val >= 1 && val <= 12) return "Level " + val;
+    return "Level " + val;
+  };
 
   const levelOption = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 101, 102, 100,
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
   ].map((i) => ({
     value: i,
-    label: i == 100 ? "Premium" : (i > 100 ? "VIP " : "Level ") + i,
+    label:
+      i === 15
+        ? "Premium"
+        : i === 13
+        ? "VIP 1"
+        : i === 14
+        ? "VIP 2"
+        : "Level " + i,
   }));
   const onSubmitSetting = (v: any) => {
     console.log("Form values received:", v);

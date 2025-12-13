@@ -1478,11 +1478,17 @@ const PartnerPage: React.FC = () => {
                   allowClear
                   onClear={onLevelChange}
                   options={[
-                    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 101, 102, 100,
+                    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
                   ].map((i) => ({
                     value: i,
                     label:
-                      i == 100 ? "Premium" : (i > 100 ? "VIP " : "Level ") + i,
+                      i === 15
+                        ? "Premium"
+                        : i === 13
+                        ? "VIP 1"
+                        : i === 14
+                        ? "VIP 2"
+                        : "Level " + i,
                   }))}
                   onChange={onLevelChange}
                 />

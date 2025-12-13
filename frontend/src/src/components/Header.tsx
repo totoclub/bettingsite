@@ -53,6 +53,8 @@ import Level7 from "@/assets/img/level/lv7.png"
 import Level8 from "@/assets/img/level/lv8.png"
 import Level9 from "@/assets/img/level/lv9.png"
 import Level10 from "@/assets/img/level/lv10.png"
+import Level11 from "@/assets/img/level/lv11.png"
+import Level12 from "@/assets/img/level/lv12.png"
 import LevelVIP1 from "@/assets/img/level/Vip1.png"
 import LevelVIP2 from "@/assets/img/level/Vip2.png"
 import Prumium from "@/assets/img/level/premium.png"
@@ -527,9 +529,11 @@ const Head = () => {
           case 8: return <Image src={Level8} width={70} alt="level8"/>;
           case 9: return <Image src={Level9} width={70} alt="level9"/>;
           case 10: return <Image src={Level10} width={70} alt="level10"/>;
-          case 11: return <Image src={LevelVIP1} width={70} alt="LevelVIP1"/>;
-          case 12: return <Image src={LevelVIP2} width={70} alt="LevelVIP2"/>;
-          case 13: return <Image src={Prumium} width={70} alt="Prumium"/>;
+          case 11: return <Image src={Level11} width={70} alt="level11"/>;
+          case 12: return <Image src={Level12} width={70} alt="level12"/>;
+          case 13: return <Image src={LevelVIP1} width={70} alt="LevelVIP1"/>;
+          case 14: return <Image src={LevelVIP2} width={70} alt="LevelVIP2"/>;
+          case 15: return <Image src={Prumium} width={70} alt="Prumium"/>;
           default: return <Image src={Level1} width={70} alt="level1"/>;
         }
       })(),

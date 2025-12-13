@@ -123,9 +123,9 @@ const BulletinPage: React.FC = () => {
     { value: '10', label: t("level10") },
     { value: '11', label: t("level11") },
     { value: '12', label: t("level12") },
-    { value: '12', label: t("vip1") },
-    { value: '13', label: t("vip2") },
-    { value: '14', label: t("premium") },
+    { value: '13', label: t("vip1") },
+    { value: '14', label: t("vip2") },
+    { value: '15', label: t("premium") },
   ];
 
   const formats = [

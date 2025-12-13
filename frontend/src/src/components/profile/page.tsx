@@ -22,6 +22,8 @@ import Level7 from "@/assets/img/level/lv7.png"
 import Level8 from "@/assets/img/level/lv8.png"
 import Level9 from "@/assets/img/level/lv9.png"
 import Level10 from "@/assets/img/level/lv10.png"
+import Level11 from "@/assets/img/level/lv11.png"
+import Level12 from "@/assets/img/level/lv12.png"
 import LevelVIP1 from "@/assets/img/level/Vip1.png"
 import LevelVIP2 from "@/assets/img/level/Vip2.png"
 import Prumium from "@/assets/img/level/premium.png"
@@ -91,14 +93,14 @@ const ProfilePage: React.FC<{checkoutModal: (modal: string) => void}> = (props) 
 
     // Function to get level image based on level number
     const getLevelImage = (level: number) => {
-      if (level >= 1 && level <= 10) {
-        const levelImages = [Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8, Level9, Level10];
+      if (level >= 1 && level <= 12) {
+        const levelImages = [Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8, Level9, Level10, Level11, Level12];
         return levelImages[level - 1];
-      } else if (level === 11) {
+      } else if (level === 13) {
         return LevelVIP1;
-      } else if (level === 12) {
+      } else if (level === 14) {
         return LevelVIP2;
-      } else if (level >= 13) {
+      } else if (level === 15) {
         return Prumium;
       }
       return Level1;

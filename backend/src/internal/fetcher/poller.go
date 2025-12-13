@@ -101,22 +101,24 @@ func updateUserLevels() {
 		currentWager := profile.Wager
 		currentLevel := int32(profile.Level)
 
-		// Find the highest level where wager <= nextLevelTargetValue
-		// Example: wager = 0, level 1 = 15000 -> level 1 (0 <= 15000)
-		// Example: wager = 30000, level 1 = 15000, level 2 = 20000, level 3 = 30000 -> level 3 (30000 <= 30000)
+		// Find the lowest level where wager <= nextLevelTargetValue
+		// NextLevelTargetValue represents the maximum wager for that level
+		// Example: wager = 25,000, level 2 = 20,000, level 3 = 30,000, level 4 = 40,000
+		// -> level 3 (25,000 <= 30,000, first level that qualifies)
+		// Example: wager = 30,000, level 2 = 20,000, level 3 = 30,000 -> level 3 (30,000 <= 30,000)
 		var newLevel int32 = 1 // Default to level 1
 		var levelName string = "Level 1"
 
-		// Iterate through levels to find the highest level where wager <= nextLevelTargetValue
-		for i := len(levels) - 1; i >= 0; i-- {
+		// Iterate through levels from lowest to highest to find the first level where wager <= nextLevelTargetValue
+		for i := 0; i < len(levels); i++ {
 			if currentWager <= levels[i].NextLevelTargetValue {
 				newLevel = int32(levels[i].LevelNumber)
 				levelName = levels[i].Name
-				break
+				break // Found the first (lowest) level that qualifies
 			}
 		}
 
-		// If wager is 0 or less than first level, set to level 1
+		// If wager is less than first level's target, set to level 1
 		if currentWager < levels[0].NextLevelTargetValue {
 			newLevel = int32(levels[0].LevelNumber)
 			levelName = levels[0].Name
